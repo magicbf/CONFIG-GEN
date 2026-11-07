@@ -21,6 +21,7 @@
 
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
 body {
   margin: 0;
   background: var(--bg);
@@ -35,7 +36,7 @@ button, input, select { font: inherit; color: inherit; }
 /* ---------- top bar ---------- */
 .top { border-bottom: 1px solid var(--line); background: #1c2532; }
 .top-inner {
-  max-width: 1440px; margin: 0 auto; padding: 18px 24px;
+  max-width: 1440px; margin: 0 auto; padding-block: 18px; padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px));
   display: flex; gap: 24px; align-items: center; justify-content: space-between; flex-wrap: wrap;
 }
 .brand h1 { font-size: 1.75rem; line-height: 1.1; }
@@ -64,7 +65,7 @@ input:focus-visible + .switch-ui { outline: 2px solid var(--amber); outline-offs
 input:disabled + .switch-ui { opacity: .4; }
 
 /* ---------- keyboard hero ---------- */
-.hero { max-width: 1440px; margin: 0 auto; padding: 28px 24px 8px; }
+.hero { max-width: 1440px; margin: 0 auto; padding-block: 28px 8px; padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); }
 .kb { overflow-x: auto; padding-bottom: 6px; }
 .kb-wrap { display: flex; gap: calc(var(--u) * 0.45); align-items: flex-start; width: max-content; margin: 0 auto; }
 .kb-main { display: flex; flex-direction: column; gap: 5px; }
@@ -115,10 +116,10 @@ input:disabled + .switch-ui { opacity: .4; }
 
 /* ---------- layout ---------- */
 .layout {
-  max-width: 1440px; margin: 0 auto; padding: 24px;
+  max-width: 1440px; margin: 0 auto; padding-block: 24px; padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px));
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(340px, 460px); gap: 28px; align-items: start;
 }
-.filters { display: flex; flex-wrap: wrap; gap: 6px; position: sticky; top: 0; z-index: 5; padding: 10px 0; background: var(--bg); }
+.filters { display: flex; flex-wrap: wrap; gap: 6px; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; padding: 10px 0; background: var(--bg); }
 .filter {
   border: 1px solid var(--line); background: transparent; border-radius: 999px; padding: 5px 13px; cursor: pointer; color: var(--muted); font-size: 0.88rem;
 }
@@ -220,7 +221,7 @@ input:disabled + .switch-ui { opacity: .4; }
 .howto li { margin-bottom: 6px; }
 .howto code { color: var(--amber); word-break: break-all; }
 
-.foot { max-width: 1440px; margin: 20px auto 0; padding: 20px 24px 40px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.foot { max-width: 1440px; margin: 20px auto 0; padding-block: 20px 40px; padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
 .foot p { max-width: 90ch; margin: 0; }
 
 /* ---------- overlays ---------- */
@@ -228,7 +229,7 @@ input:disabled + .switch-ui { opacity: .4; }
 .capture[hidden], .toast[hidden] { display: none; }
 .capture-box { background: var(--panel); border: 2px solid var(--amber); border-radius: var(--radius-m); padding: 28px 32px; max-width: 420px; margin: 16px; text-align: center; font-family: var(--head); font-size: 1.15rem; }
 .capture-box p { margin: 0; }
-.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--amber); color: #1a1300; padding: 8px 16px; border-radius: var(--radius-s); font-weight: 600; z-index: 60; }
+.toast { position: fixed; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); background: var(--amber); color: #1a1300; padding: 8px 16px; border-radius: var(--radius-s); font-weight: 600; z-index: 60; }
 
 /* ---------- responsive ---------- */
 @media (max-width: 1100px) {
@@ -238,7 +239,7 @@ input:disabled + .switch-ui { opacity: .4; }
 }
 @media (max-width: 640px) {
   :root { --u: 2.1rem; }
-  .top-inner, .hero, .layout, .foot { padding-left: 16px; padding-right: 16px; }
+  .top-inner, .hero, .layout, .foot { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
   .brand h1 { font-size: 1.4rem; }
   .slot { grid-template-columns: 1fr; }
   .slot-cmd { grid-column: 1; }

@@ -462,7 +462,18 @@
   function toast(msg) {
     const t = $("#toast");
     t.textContent = msg; t.hidden = false;
-    clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), 2200);
+    clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), 3200);
+  }
+
+  function copyText(text, name) {
+    const msg = `Copied ${name}. Paste it into a new text file named ${name}.`;
+    const fallback = () => {
+      const ta = el("textarea", { style: "position:fixed;opacity:0" }); ta.value = text; document.body.append(ta); ta.select();
+      let ok = false; try { ok = document.execCommand("copy"); } catch (e) { /* ignore */ }
+      ta.remove();
+      toast(ok ? msg : "Copy failed. Select the text in the preview and copy it yourself.");
+    };
+    try { navigator.clipboard.writeText(text).then(() => toast(msg), fallback); } catch (e) { fallback(); }
   }
 
   // ---------- init ----------
@@ -470,19 +481,24 @@
     const mm = $("#mmsafe");
     mm.checked = state.mmSafe;
     mm.addEventListener("change", () => { state.mmSafe = mm.checked; changed(); });
-    $("#copy").addEventListener("click", async () => {
-      const text = buildCfg();
-      try { await navigator.clipboard.writeText(text); toast("Copied autoexec.cfg"); }
-      catch (e) {
-        const ta = el("textarea", {}, text); document.body.append(ta); ta.select();
-        try { document.execCommand("copy"); toast("Copied autoexec.cfg"); } catch (e2) { toast("Copy failed. Select the text and copy it yourself."); }
-        ta.remove();
+    $("#copy").addEventListener("click", () => copyText(buildCfg(), "autoexec.cfg"));
+    const noDl = !!window.NO_DOWNLOAD; // hosted viewers block file downloads, so copy instead
+    if (noDl) {
+      $("#dl").textContent = "Copy autoexec.cfg";
+      $("#dl-practice").textContent = "Copy practice.cfg";
+      $("#copy").hidden = true;
+    }
+    $("#dl").addEventListener("click", () => noDl ? copyText(buildCfg(), "autoexec.cfg") : (download("autoexec.cfg", buildCfg()), toast("Downloaded autoexec.cfg")));
+    $("#dl-practice").addEventListener("click", () => noDl ? copyText(buildPracticeCfg(), "practice.cfg") : (download("practice.cfg", buildPracticeCfg()), toast("Downloaded practice.cfg")));
+    const reset = $("#reset");
+    let armedAt = 0;
+    reset.addEventListener("click", () => {
+      if (Date.now() - armedAt > 3000) {
+        armedAt = Date.now(); reset.textContent = "Click again to reset";
+        setTimeout(() => { if (Date.now() - armedAt >= 3000) reset.textContent = "Reset"; }, 3100);
+        return;
       }
-    });
-    $("#dl").addEventListener("click", () => { download("autoexec.cfg", buildCfg()); toast("Downloaded autoexec.cfg"); });
-    $("#dl-practice").addEventListener("click", () => { download("practice.cfg", buildPracticeCfg()); toast("Downloaded practice.cfg"); });
-    $("#reset").addEventListener("click", () => {
-      if (!confirm("Reset every bind and setting to the defaults?")) return;
+      armedAt = 0; reset.textContent = "Reset";
       state = defaultState(); mm.checked = true; selectedKey = null; changed();
       toast("Reset to defaults");
     });
