@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CS2 Config Generator</title>
+  <meta name="description" content="Build a Counter-Strike 2 autoexec: bunny hop, grenade keys, buy binds, radar and audio tweaks, with a clear label on what Valve servers allow.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <div class="brand">
+        <h1>CS2 Config Generator</h1>
+        <p>Pick the binds you want, see them on your keyboard, and download an autoexec.cfg.</p>
+      </div>
+      <label class="mm-switch" title="Hides binds that Valve blocks on official matchmaking servers">
+        <input type="checkbox" id="mmsafe">
+        <span class="switch-ui" aria-hidden="true"></span>
+        <span><strong>Matchmaking-safe mode</strong><small>Leaves out binds Valve blocks on official servers</small></span>
+      </label>
+    </div>
+  </header>
+
+  <section class="hero" aria-label="Your keyboard">
+    <div id="kb" class="kb"></div>
+    <p id="kb-info" class="kb-info" aria-live="polite"></p>
+    <ul class="legend">
+      <li><span class="sw sw-safe"></span>Your bind</li>
+      <li><span class="sw sw-restricted"></span>Blocked on Valve servers</li>
+      <li><span class="sw sw-local"></span>Practice only</li>
+      <li><span class="sw sw-conflict"></span>Two binds on one key</li>
+      <li><span class="sw sw-default"></span>CS2 default</li>
+    </ul>
+  </section>
+
+  <main class="layout">
+    <div class="lib-col">
+      <nav id="filters" class="filters" aria-label="Bind categories"></nav>
+      <div id="library"></div>
+    </div>
+
+    <aside class="out-col" aria-label="Generated config">
+      <div class="out">
+        <div class="out-head">
+          <h2>autoexec.cfg</h2>
+          <span id="cfg-meta" class="out-meta"></span>
+        </div>
+        <pre id="cfg" class="cfg" tabindex="0" aria-label="Generated autoexec.cfg"></pre>
+        <div class="out-actions">
+          <button type="button" id="dl" class="btn btn-primary">Download autoexec.cfg</button>
+          <button type="button" id="copy" class="btn">Copy</button>
+          <button type="button" id="dl-practice" class="btn" hidden>Download practice.cfg</button>
+          <button type="button" id="reset" class="btn btn-ghost">Reset</button>
+        </div>
+        <details class="howto">
+          <summary>How to install</summary>
+          <ol>
+            <li>Save the file into <code>Steam/steamapps/common/Counter-Strike Global Offensive/game/csgo/cfg/</code>. Put practice.cfg in the same folder.</li>
+            <li>In Steam, right-click Counter-Strike 2, choose Properties, and add <code>+exec autoexec</code> to Launch options.</li>
+            <li>Start the game. The console shows "autoexec.cfg loaded". To reload without restarting, type <code>exec autoexec</code> in the console.</li>
+          </ol>
+        </details>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="foot">
+    <p>Every command here is a standard console command. Nothing modifies game files or reads game memory. Binds labelled "Blocked on Valve servers" follow Valve's August 2024 rule on single-key movement and attack automation. Leagues and third-party platforms have their own rules, so check before using them there.</p>
+  </footer>
+
+  <div id="capture" class="capture" hidden role="dialog" aria-modal="true" aria-labelledby="capture-msg">
+    <div class="capture-box"><p id="capture-msg"></p></div>
+  </div>
+  <div id="toast" class="toast" hidden role="status"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
